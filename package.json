@@ -1,0 +1,24 @@
+{
+  "name": "feishu-chatgpt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shfshanyue/feishu-chatgpt.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shfshanyue/feishu-chatgpt/issues"
+  },
+  "homepage": "https://github.com/shfshanyue/feishu-chatgpt#readme",
+  "dependencies": {
+    "@larksuiteoapi/node-sdk": "^1.14.0",
+    "@types/node": "^18.15.11",
+    "@vercel/edge": "^0.3.1",
+    "@vercel/node": "^2.9.10",
+    "vercel": "^28.16.12"
+  }
+}
