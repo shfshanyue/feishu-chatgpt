@@ -6,6 +6,7 @@ specifiers:
   '@vercel/edge': ^0.3.1
   '@vercel/node': ^2.9.10
   lru-cache: ^8.0.4
+  midash: ^0.8.2
   vercel: ^28.16.12
 
 dependencies:
@@ -14,6 +15,7 @@ dependencies:
   '@vercel/edge': 0.3.1
   '@vercel/node': 2.9.10
   lru-cache: 8.0.4
+  midash: 0.8.2
   vercel: 28.16.12
 
 packages:
@@ -4540,6 +4542,11 @@ packages:
     dependencies:
       braces: 3.0.2
       picomatch: 2.3.1
+    dev: false
+
+  /midash/0.8.2:
+    resolution: {integrity: sha512-P8nzSWlA+zQhRCQsmDqQBCsLS+lpRC+M0/IVRKeE/27+ooRaUUuO7QsdZXqrbW966aOBxsIeINVEJTz8nRhm+w==}
+    engines: {node: '>=14'}
     dev: false
 
   /mime-db/1.52.0:

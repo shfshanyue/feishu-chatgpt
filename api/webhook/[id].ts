@@ -3,6 +3,7 @@ import { VercelRequest, VercelResponse } from '@vercel/node'
 
 import config from '../../config'
 import { cache } from '../../lib/cache'
+import { reply } from '../../lib/reply'
 
 function createLarkClient(appId: string, appSecret: string): lark.Client {
   let client = cache[appId]
@@ -86,20 +87,27 @@ export default async function webhook(
     })
   }
   cache.set(eventId, true, {
-    // 十小时
+    // 如果飞书没有在规定时间内接收到消息，则会重试，为了防止重试，此时使用缓存来避免次情况
+    // 但是它是内存缓存，应用重新部署时会失效
     ttl: 10 * 3600 * 1000,
   })
 
   if (body.header.event_type === 'im.message.receive_v1') {
     const message = body.event.message
     const text = JSON.parse(message.content).text.replace('@_user_1 ', '')
+    const answer = await reply([
+      {
+        role: 'user',
+        content: `${app.prompt || ''} ${text}`,
+      },
+    ])
     await client.im.message.create({
       params: {
         receive_id_type: 'chat_id',
       },
       data: {
         receive_id: message.chat_id,
-        content: JSON.stringify({ text }),
+        content: JSON.stringify({ text: answer }),
         msg_type: 'text',
       },
     })
