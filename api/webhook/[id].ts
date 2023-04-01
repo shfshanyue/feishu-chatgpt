@@ -1,19 +1,10 @@
 import * as lark from '@larksuiteoapi/node-sdk'
-import LRU from 'lru-cache'
 import { VercelRequest, VercelResponse } from '@vercel/node'
 
 import config from '../../config'
+import { cache } from '../../lib/cache'
 
-export const cache = new LRU({
-  max: 1000,
-  maxSize: 50000,
-  ttl: 1000 * 60 * 60 * 2,
-  sizeCalculation(key, value) {
-    return typeof value === 'string' ? value.length : 1
-  },
-})
-
-function createLarkClient(appId: string, appSecret: string) {
+function createLarkClient(appId: string, appSecret: string): lark.Client {
   let client = cache[appId]
   if (client) {
     return client
@@ -91,7 +82,7 @@ export default async function webhook(
   const eventId = body.header.event_id
   if (cache.get(eventId)) {
     return response.json({
-      retry: true
+      retry: true,
     })
   }
   cache.set(eventId, true, {
@@ -99,19 +90,21 @@ export default async function webhook(
     ttl: 10 * 3600 * 1000,
   })
 
-  const message = body.event.message
-  const text = JSON.parse(message.content).text
+  if (body.header.event_type === 'im.message.receive_v1') {
+    const message = body.event.message
+    const text = JSON.parse(message.content).text.replace('@_user_1 ', '')
+    await client.im.message.create({
+      params: {
+        receive_id_type: 'chat_id',
+      },
+      data: {
+        receive_id: message.chat_id,
+        content: JSON.stringify({ text }),
+        msg_type: 'text',
+      },
+    })
+  }
 
-  await client.im.message.create({
-    params: {
-      receive_id_type: 'chat_id',
-    },
-    data: {
-      receive_id: message.chat_id,
-      content: JSON.stringify({ text }),
-      msg_type: 'text',
-    },
-  })
   return response.json({
     done: true,
   })
