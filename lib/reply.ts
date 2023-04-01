@@ -31,11 +31,12 @@ export async function reply(messages: ChatMessage[]) {
     .then((data) => {
       console.log(JSON.stringify({
         input: messages,
-        output: data.choices[0].message
+        output: data
       }))
       return data.choices[0].message.content
     })
-    .catch(() => {
+    .catch((e) => {
+      console.error(e)
       return '抱歉，我发生了一点小意外。'
     })
 }
