@@ -5,6 +5,7 @@ specifiers:
   '@types/node': ^18.15.11
   '@vercel/edge': ^0.3.1
   '@vercel/node': ^2.9.10
+  lru-cache: ^8.0.4
   vercel: ^28.16.12
 
 dependencies:
@@ -12,6 +13,7 @@ dependencies:
   '@types/node': 18.15.11
   '@vercel/edge': 0.3.1
   '@vercel/node': 2.9.10
+  lru-cache: 8.0.4
   vercel: 28.16.12
 
 packages:
@@ -4080,6 +4082,11 @@ packages:
   /lru-cache/7.18.3:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
+    dev: false
+
+  /lru-cache/8.0.4:
+    resolution: {integrity: sha512-E9FF6+Oc/uFLqZCuZwRKUzgFt5Raih6LfxknOSAVTjNkrCZkBf7DQCwJxZQgd9l4eHjIJDGR+E+1QKD1RhThPw==}
+    engines: {node: '>=16.14'}
     dev: false
 
   /magic-string/0.25.9:
