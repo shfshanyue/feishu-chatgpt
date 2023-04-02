@@ -1,0 +1,16 @@
+services:
+  feishu-chatgpt:
+     build: .
+     labels:
+       - traefik.http.routers.feishu-chatgpt.rule=Host(`feishu-chatgpt.shanyue.tech`)
+       - traefik.http.routers.feishu-chatgpt.tls=true
+       - traefik.http.routers.feishu-chatgpt.tls.certresolver=le
+     volumes:
+       - /etc/localtime:/etc/localtime
+       - /etc/timezone:/etc/timezone
+     env_file: .env
+     environment:
+       - NODE_ENV=production
+     restart: always
+     expose:
+       - 3000
