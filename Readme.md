@@ -28,11 +28,17 @@ export default {
   // 可配置多个飞书机器人
   app: {
     'shanyue-gpt': {
+      // 与飞书机器人上的名称保持一致
+      name: '翻译润色',
+
       appId: process.env.SHANYUE_GPT_APP_ID,
       appSecret: process.env.SHANYUE_GPT_APP_SECRET,
       prompt: '将我输入的任何语言翻译成中文，如果我输入的是中文则翻译成英文。 '
     },
     'shanyue-sql': {
+      // 与飞书机器人上的名称保持一致
+      name: 'SQL Pro',
+
       appId: process.env.SHANYUE_SQL_APP_ID,
       appSecret: process.env.SHANYUE_SQL_APP_SECRET,
       prompt: ''
@@ -97,6 +103,9 @@ export default {
   app: {
     // key 代表你飞书应用的唯一标识，在下边飞书机器人事件订阅的前缀中会被使用到
     'shanyue-gpt': {
+      // 与飞书机器人上的名称保持一致
+      name: '翻译润色',
+
       // 填入每一个飞书机器人应用的 appi_id/app_secret
       appId: process.env.SHANYUE_GPT_APP_ID,
       appSecret: process.env.SHANYUE_GPT_APP_SECRET,
@@ -105,6 +114,8 @@ export default {
       prompt: '将我输入的任何语言翻译成中文，如果我输入的是中文则翻译成英文。 '
     },
     'shanyue-sql': {
+      // 与飞书机器人上的名称保持一致
+      name: 'SQL Pro',
       appId: process.env.SHANYUE_SQL_APP_ID,
       appSecret: process.env.SHANYUE_SQL_APP_SECRET,
       prompt: ''
@@ -120,6 +131,10 @@ $ npx vercel deploy --prod
 ```
 
 4. 配置飞书应用域名 
+
+可参考飞书文档：
+
+1. [事件订阅指南](https://open.feishu.cn/document/ukTMukTMukTM/uUTNz4SN1MjL1UzM)
 
 配置飞书中的**事件订阅**的请求地址，其为以下形式，需要根据你们的配置自行填写：
 

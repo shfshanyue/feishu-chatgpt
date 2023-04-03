@@ -2,8 +2,8 @@ import * as lark from '@larksuiteoapi/node-sdk'
 import { VercelRequest, VercelResponse } from '@vercel/node'
 
 import config from '../../config'
+import eventHandles from '../../event'
 import { cache } from '../../lib/cache'
-import { reply } from '../../lib/reply'
 
 function createLarkClient(appId: string, appSecret: string): lark.Client {
   let client = cache[appId]
@@ -17,6 +17,7 @@ function createLarkClient(appId: string, appSecret: string): lark.Client {
   return client
 }
 
+// https://open.feishu.cn/document/ukTMukTMukTM/uYDNxYjL2QTM24iN0EjN/event-subscription-configure-/configure-encrypt-key
 // {
 //   "schema": "2.0",
 //   "header": {
@@ -66,12 +67,22 @@ export default async function webhook(
   response: VercelResponse
 ) {
   const { id } = request.query
+
+  // body 数据结构见：https://open.feishu.cn/document/ukTMukTMukTM/uYDNxYjL2QTM24iN0EjN/event-subscription-configure-/configure-encrypt-key
   const body = request.body || {}
 
   const app = config.app[id as string]
 
+  // 如果找不到该应用，则不回复
   if (!app) {
     return response.status(404).send(`App ${id} Not Found`)
+  }
+  // 如果没有提及机器人，则不回复
+  // TODO: 后续通过发接口获取 name，无需用户手动指定 
+  if (app.name !== body?.event?.message?.mentions?.[0]?.name) {
+    return response.json({
+      mention: false
+    })
   }
 
   const client = createLarkClient(app.appId, app.appSecret)
@@ -92,26 +103,8 @@ export default async function webhook(
     ttl: 10 * 3600 * 1000,
   })
 
-  if (body.header.event_type === 'im.message.receive_v1') {
-    const message = body.event.message
-    const text = JSON.parse(message.content).text.replace('@_user_1 ', '')
-    const answer = await reply([
-      {
-        role: 'user',
-        content: `${app.prompt || ''} ${text}`,
-      },
-    ])
-    await client.im.message.create({
-      params: {
-        receive_id_type: 'chat_id',
-      },
-      data: {
-        receive_id: message.chat_id,
-        content: JSON.stringify({ text: answer }),
-        msg_type: 'text',
-      },
-    })
-  }
+  // 事件列表见：https://open.feishu.cn/document/ukTMukTMukTM/uYDNxYjL2QTM24iN0EjN/event-list
+  await eventHandles[body.header.event_type]?.(body, { client, app })
 
   return response.json({
     done: true,
