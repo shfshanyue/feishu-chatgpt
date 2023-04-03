@@ -2,6 +2,10 @@
 
 三分钟，将 ChatGPT 飞书机器人部署到 vercel，并同时支持多个应用，可一次性添加多个机器人。
 
+以下是飞书机器人后台管理平台，可快速添加机器人应用。（后台管理源码尚未开源）
+
+![](https://static.shanyue.tech/images/23-04-03/clipboard-4646.c8fcac.webp)
+
 ## 特性
 
 + 负载均衡：多个 Token 增强其稳定性
