@@ -17,6 +17,48 @@ function createLarkClient(appId: string, appSecret: string): lark.Client {
   return client
 }
 
+// {
+//   bot: {
+//     activate_status: 2,
+//     app_name: '翻译润色',
+//     avatar_url: 'https://s1-imfile.feishucdn.com/static-resource/v1/v2_cdd25ec2-5adf-4c09-bfdc-95ab98e9fd3g',
+//     ip_white_list: [],
+//     open_id: 'ou_1962002bcd01ce81e516ff9c70b0f8b1'
+//   },
+//   code: 0,
+//   msg: 'ok'
+// }
+type Bot = {
+  open_id: string;
+  app_name: string;
+}
+
+async function getBot(client: lark.Client): Promise<Bot | undefined> {
+  const key = `Bot:${client.appId}`
+  let bot = cache.get(key) as Bot
+  if (bot) {
+    return bot
+  }
+  bot = await client.request({ url: '/open-apis/bot/v3/info' }).then(o => o.bot).catch(() => {})
+  if (bot) {
+    cache.set(key, bot)
+  }
+  return bot
+}
+
+function isDuplicateId(id: string): boolean {
+  const key = `Event:${id}`
+  if (cache.get(key)) {
+    return true
+  }
+  cache.set(key, true, {
+    // 如果飞书没有在规定时间内接收到消息，则会重试，为了防止重试，此时使用缓存来避免次情况
+    // 但是它是内存缓存，应用重新部署时会失效
+    ttl: 10 * 3600 * 1000,
+  })
+  return false
+}
+
 // https://open.feishu.cn/document/ukTMukTMukTM/uYDNxYjL2QTM24iN0EjN/event-subscription-configure-/configure-encrypt-key
 // {
 //   "schema": "2.0",
@@ -70,6 +112,7 @@ export default async function webhook(
 
   // body 数据结构见：https://open.feishu.cn/document/ukTMukTMukTM/uYDNxYjL2QTM24iN0EjN/event-subscription-configure-/configure-encrypt-key
   const body = request.body || {}
+  console.log(JSON.stringify(body, null, 2))
 
   const app = config.app[id as string]
 
@@ -77,31 +120,29 @@ export default async function webhook(
   if (!app) {
     return response.status(404).send(`App ${id} Not Found`)
   }
-  // 如果没有提及机器人，则不回复
-  // TODO: 后续通过发接口获取 name，无需用户手动指定 
-  if (app.name !== body?.event?.message?.mentions?.[0]?.name) {
-    return response.json({
-      mention: false
-    })
-  }
-
-  const client = createLarkClient(app.appId, app.appSecret)
-
   if (body.challenge) {
     return response.json({ challenge: body.challenge })
   }
 
+  const client = createLarkClient(app.appId, app.appSecret)
+  const bot = await getBot(client)
+
+  // 如果是在群聊中，且没有 @提及机器人，则不回复
+  if (
+    body?.event?.message?.chat_type === 'group' &&
+    bot?.open_id !== body?.event?.message?.mentions?.[0]?.id.open_id
+  ) {
+    return response.json({
+      mention: false,
+    })
+  }
+
   const eventId = body.header.event_id
-  if (cache.get(eventId)) {
+  if (isDuplicateId(eventId)) {
     return response.json({
       retry: true,
     })
   }
-  cache.set(eventId, true, {
-    // 如果飞书没有在规定时间内接收到消息，则会重试，为了防止重试，此时使用缓存来避免次情况
-    // 但是它是内存缓存，应用重新部署时会失效
-    ttl: 10 * 3600 * 1000,
-  })
 
   // 事件列表见：https://open.feishu.cn/document/ukTMukTMukTM/uYDNxYjL2QTM24iN0EjN/event-list
   await eventHandles[body.header.event_type]?.(body, { client, app })

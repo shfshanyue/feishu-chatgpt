@@ -31,7 +31,7 @@ export async function reply(messages: ChatMessage[]) {
     .then((data) => {
       console.log(JSON.stringify({
         input: messages,
-        output: data
+        output: data.choices[0].message
       }))
       return data.choices[0].message.content
     })
