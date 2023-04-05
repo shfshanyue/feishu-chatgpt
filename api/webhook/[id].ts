@@ -54,7 +54,7 @@ function isDuplicateId(id: string): boolean {
   cache.set(key, true, {
     // 如果飞书没有在规定时间内接收到消息，则会重试，为了防止重试，此时使用缓存来避免次情况
     // 但是它是内存缓存，应用重新部署时会失效
-    ttl: 10 * 3600 * 1000,
+    ttl: 24 * 3600 * 1000,
   })
   return false
 }
