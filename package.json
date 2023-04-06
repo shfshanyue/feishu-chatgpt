@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "dev": "tsx dev.ts"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shfshanyue/feishu-chatgpt.git"
@@ -21,6 +23,7 @@
     "@vercel/node": "^2.9.10",
     "lru-cache": "^8.0.4",
     "midash": "^0.8.2",
+    "tsx": "^3.12.6",
     "vercel": "^28.16.12"
   }
 }
