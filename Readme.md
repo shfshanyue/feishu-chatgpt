@@ -142,6 +142,72 @@ https://xxx.vercel.app/api/webhook/shanyue-gpt
 
 <img src="https://static.shanyue.tech/images/23-04-02/clipboard-3293.749782.webp" width="300">
 
+## 开发
+
+``` bash
+# 开启本地开发环境
+$ npm run dev
+
+# 模拟发送飞书的 webhook
+$ curl localhost:3000/api/webhook/shanyue-translation \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+    "challenge": "ajls384kdjx98XX",
+    "token": "xxxxxx",
+    "type": "url_verification"
+  }'
+
+# 模拟发送飞书私聊信息的 webhook
+$ curl localhost:3000/api/webhook/shanyue-translation \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+    "schema": "2.0",
+    "header": {
+      "event_id": "e9ccca3822970e6284ee8b2123b97936",
+      "token": "xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "create_time": "1680757473021",
+      "event_type": "im.message.receive_v1",
+      "app_id": "cli_xxxxxxxxxxxxxxxx"
+    },
+    "event": {
+      "message": {
+        "chat_id": "oc_d5dd3ad97fefd3f063a176a11dad56f9",
+        "chat_type": "p2p",
+        "content": "{\"text\":\"你好啊\"}",
+        "create_time": "1680757472656",
+        "message_id": "om_104c88bc449d2138758cbc7c9d30f158",
+        "message_type": "text"
+      },
+      "sender": {
+        "sender_id": {
+          "open_id": "ou_1cb5e56348d6d0eb90330b11cd4a53a2",
+          "union_id": "on_be1715df18b72479f0ebaca4c6ab2d08",
+          "user_id": "267g51ab"
+        },
+        "sender_type": "user",
+        "tenant_key": "11e3bf03c281d75d"
+      }
+    }
+  }
+```
+
+## 部署
+
+### vercel 
+
+### docker
+
+``` bash
+# 启动容器
+$ docker compose up --build -d
+
+# 查看服务状态
+$ docker compose ps
+
+# 查看日志
+$ docker compose logs --tail 100 --follow
+```
+
 ## 交流
 
 <img src="https://static.shanyue.tech/images/23-04-02/wechat.892011.webp" width="600">
