@@ -8,7 +8,7 @@ import type {
 import { Server } from 'http'
 import { Readable } from 'stream'
 
-function rawBody(readable: Readable): Promise<Buffer> {
+export function rawBody(readable: Readable): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     let bytes = 0
     const chunks: Buffer[] = []

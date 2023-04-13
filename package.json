@@ -19,11 +19,15 @@
   "dependencies": {
     "@larksuiteoapi/node-sdk": "^1.14.0",
     "@types/node": "^18.15.11",
+    "@types/xml2js": "^0.4.11",
     "@vercel/edge": "^0.3.1",
     "@vercel/node": "^2.9.10",
+    "@wecom/crypto": "^1.0.1",
     "lru-cache": "^8.0.4",
     "midash": "^0.8.2",
     "tsx": "^3.12.6",
-    "vercel": "^28.16.12"
+    "vercel": "^28.16.12",
+    "wretch": "^2.5.2",
+    "xml2js": "^0.5.0"
   }
 }
