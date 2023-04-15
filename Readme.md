@@ -8,13 +8,14 @@
 
 ## 特性
 
-[x] 负载均衡：多个 Token 增强其稳定性
-[x] 多机器人：可同时配置多个飞书机器人
-[x] 场景模式：可通过 PROMPT 配置机器人为专业的翻译、面试官、医生等
-[x] 反向代理：为不同地区提供更快的 OpenAI 的代理 API 地址
-[x] 群聊控制：可通过正则表达式根据群聊名称控制在哪个群开启机器人
-[x] 私聊控制：可通过正则表达式根据私聊微信昵称控制开启机器人
-[x] 支持日志：可查看每天多少条记录
++ [x] 负载均衡：多个 Token 增强其稳定性
++ [x] 多机器人：可同时配置多个飞书机器人
++ [x] 场景模式：可通过 PROMPT 配置机器人为专业的翻译、面试官、医生等
++ [x] 反向代理：为不同地区提供更快的 OpenAI 的代理 API 地址
++ [x] 群聊控制：可通过正则表达式根据群聊名称控制在哪个群开启机器人
++ [x] 私聊控制：可通过正则表达式根据私聊微信昵称控制开启机器人
++ [x] 支持日志：可查看每天多少条记录
++ [x] 诸多平台：支持飞书、企业微信等诸多平台的机器人应用
 
 ## 配置与环境变量
 
@@ -38,6 +39,15 @@ export default {
       prompt: '以下我输入的语言，如果是任意语言则翻译其为中文，如果为中文则将其翻译为英文：\n'
     },
   },
+
+  // 可配置多个企业微信机器人
+  wxwork: {
+    'shanyue-gpt': {
+      corpId: process.env.SHANYUE_GPT_CORP_ID,
+      appSecret: process.env.SHANYUE_GPT_APP_SECRET,
+      token: process.env.SHANYUE_GPT_TOKEN,
+      aesKey: process.env.SHANYUE_GPT_AES_KEY
+    }
   },
 
   baseURL: process.env.BASE_URL || 'https://api.openai.com/v1',
@@ -88,9 +98,11 @@ SHANYUE_GPT_APP_ID="xxx"
 SHANYUE_GPT_APP_SECRET="xxx"
 ```
 
-2. 配置多个飞书机器人应用
+如果对环境变量不熟，也可以在 `config.ts` 中直接配置数据，注意，此时因其中包含敏感数据，请勿提交至 Github 等公共平台。
 
-编辑 `./config.ts`，配置多个飞书机器人应用。
+2. 配置多个飞书机器人或企业微信机器人应用
+
+编辑 `./config.ts`，配置多个飞书机器人或者企业微信机器人应用。
 
 ``` js
 export default {
@@ -109,6 +121,15 @@ export default {
       // 填入 prompt，让每一个飞书机器人都做不同的事儿
       prompt: '以下我输入的语言，如果是任意语言则翻译其为中文，如果为中文则将其翻译为英文：\n'
     },
+  },
+
+  wxwork: {
+    'shanyue-gpt': {
+      corpId: process.env.SHANYUE_GPT_CORP_ID,
+      appSecret: process.env.SHANYUE_GPT_APP_SECRET,
+      token: process.env.SHANYUE_GPT_TOKEN,
+      aesKey: process.env.SHANYUE_GPT_AES_KEY
+    }
   },
 }
 ```
