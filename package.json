@@ -18,6 +18,7 @@
   "homepage": "https://github.com/shfshanyue/feishu-chatgpt#readme",
   "dependencies": {
     "@larksuiteoapi/node-sdk": "^1.14.0",
+    "@shanyue/promise-utils": "^2.0.4",
     "@types/node": "^18.15.11",
     "@types/xml2js": "^0.4.11",
     "@vercel/edge": "^0.3.1",
